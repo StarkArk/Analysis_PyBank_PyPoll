@@ -18,7 +18,7 @@ with open(pybank_csv) as csvfile:
 
     pybank_headers = next(csv_reader)
 
-    # Fill lists for months and profit/loss
+    # Fill lists from months and profit/loss columns
     for row in csv_reader:
         pybank_months.append(row[0])
         pybank_profit_loss.append(float(row[1]))
