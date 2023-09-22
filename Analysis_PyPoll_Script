@@ -24,30 +24,87 @@ with open(pypoll_csv) as csvfile:
         county.append(str(row[1]))
         candidate.append(str(row[2]))
 
-print(len(ballot_id))
-print(len(county))
-print(len(candidate))
+# print(len(ballot_id))
+# print(len(county))
+# print(len(candidate))
 u_ballot_id = len(set(ballot_id))
-u_county = len(set(county))
-u_candidate = len(set(candidate))
-u_candidates = set(candidate)
-print(u_ballot_id, u_county, u_candidate)
-print(u_candidates)
+# u_county = len(set(county))
+# u_candidate = len(set(candidate))
+u_candidates = (set(candidate))
+# print(u_ballot_id, u_county, u_candidate)
+# print(u_candidates)
 
 # Calculate the Key Metrics: Total Votes Cast, a List of Candidates, Percentage of Votes for Each, 
-# Total Votes for each, Winner
+# Total Votes for each, the Winner
 total_votes = len(ballot_id)
 unique_candidates = list(set(candidate))
 
 vote_count_dict = {key: 0 for key in unique_candidates}
+vote_percent_dict = {key: 0 for key in unique_candidates}
 
-#vote_counts = []
-print(vote_count_dict)
+# vote_counts = []
+# print(vote_count_dict)
 
 for contender in candidate:
     vote_count_dict[contender] += 1
 
-print(vote_count_dict)
+# print(vote_count_dict)
+winner_count = 0
+winner = ""
+
+for key in vote_count_dict:
+    vote_percent_dict[key] = vote_count_dict[key]/total_votes
+    if vote_count_dict[key] > winner_count:
+        winner = key
+        winner_count = vote_count_dict[key]
+
+print(vote_percent_dict)
+print(winner)
+
+# Print results to Terminal
+print("")
+print("Election Results")
+print("")
+print("--------------------------")
+print("")
+print(f"Total Votes: {total_votes}")
+print("")
+print("--------------------------")
+print("")
+print(f"{unique_candidates[0]}: {round(vote_percent_dict[unique_candidates[0]], 3)}")
+print("")
+print(f"Average Change: ${round(avg_pl_change, 2)}")
+print("")
+print(f"Greatest Increase in Profits: {max_pl_change_date} (${round(max_pl_change)})")
+print("")
+print(f"Greatest Decrease in Profits: {min_pl_change_date} (${round(min_pl_change)})")
+print("")
+
+# Write and export the results to a text file: pybank_financial_analysis.txt
+# Found this sys module solution on stackoverflow:
+# "https://stackoverflow.com/questions/23364096/how-to-write-output-of-terminal-to-file"
+f = open("pybank_financial_analysis.txt", 'w')
+sys.stdout = f
+
+print("")
+print("Financial Analysis")
+print("")
+print("--------------------------")
+print("")
+print(f"Total Months: {total_months}")
+print("")
+print(f"Total: ${round(total_amount_p_and_l)}")
+print("")
+print(f"Average Change: ${round(avg_pl_change, 2)}")
+print("")
+print(f"Greatest Increase in Profits: {max_pl_change_date} (${round(max_pl_change)})")
+print("")
+print(f"Greatest Decrease in Profits: {min_pl_change_date} (${round(min_pl_change)})")
+print("")
+
+f.close()
+
+
 
 
 
