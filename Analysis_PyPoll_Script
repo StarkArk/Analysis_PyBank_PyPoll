@@ -3,63 +3,52 @@ import os
 import csv
 import sys
 
-# Set the path to retrieve the budget data file for Pybank
+# Set the path to retrieve the voting records file for PyPoll
 pypoll_csv = os.path.join("..", "Starter_Code", "PyPoll", "Resources", "election_data.csv")
 
 
-# Empty lists to hold the polling data columns
+# Empty lists to hold the polling data
 ballot_id = []
 county = []
 candidate = []
 
+# Open csv file and fill lists
 with open(pypoll_csv) as csvfile:
     csv_reader = csv.reader(csvfile, delimiter=",")
 
     pypoll_headers = next(csv_reader)
-
-    print(pypoll_headers)
 
     for row in csv_reader:
         ballot_id.append(int(row[0]))
         county.append(str(row[1]))
         candidate.append(str(row[2]))
 
-# print(len(ballot_id))
-# print(len(county))
-# print(len(candidate))
-u_ballot_id = len(set(ballot_id))
-# u_county = len(set(county))
-# u_candidate = len(set(candidate))
-u_candidates = (set(candidate))
-# print(u_ballot_id, u_county, u_candidate)
-# print(u_candidates)
 
 # Calculate the Key Metrics: Total Votes Cast, a List of Candidates, Percentage of Votes for Each, 
 # Total Votes for each, the Winner
-total_votes = len(ballot_id)
+total_votes = len(ballot_id)                                                
 unique_candidates = list(set(candidate))
+unique_candidates.sort()
 
+# Dictionaries to hold votes
 vote_count_dict = {key: 0 for key in unique_candidates}
 vote_percent_dict = {key: 0 for key in unique_candidates}
 
-# vote_counts = []
-# print(vote_count_dict)
-
+# Count the votes
 for contender in candidate:
     vote_count_dict[contender] += 1
 
-# print(vote_count_dict)
+# Variables to keep track of the winner and their count
 winner_count = 0
 winner = ""
 
+# Calculate the percentage of votes each candidate received and determine the winner 
 for key in vote_count_dict:
     vote_percent_dict[key] = vote_count_dict[key]/total_votes
     if vote_count_dict[key] > winner_count:
-        winner = key
+        winner = key                                                     
         winner_count = vote_count_dict[key]
 
-print(vote_percent_dict)
-print(winner)
 
 # Print results to Terminal
 print("")
@@ -71,131 +60,40 @@ print(f"Total Votes: {total_votes}")
 print("")
 print("--------------------------")
 print("")
-print(f"{unique_candidates[0]}: {round(vote_percent_dict[unique_candidates[0]], 3)}")
+print(f"{unique_candidates[0]}: {round(100 * vote_percent_dict[unique_candidates[0]], 3)}% ({vote_count_dict[unique_candidates[0]]})")
 print("")
-print(f"Average Change: ${round(avg_pl_change, 2)}")
+print(f"{unique_candidates[1]}: {round(100 * vote_percent_dict[unique_candidates[1]], 3)}% ({vote_count_dict[unique_candidates[1]]})")
 print("")
-print(f"Greatest Increase in Profits: {max_pl_change_date} (${round(max_pl_change)})")
-print("")
-print(f"Greatest Decrease in Profits: {min_pl_change_date} (${round(min_pl_change)})")
-print("")
-
-# Write and export the results to a text file: pybank_financial_analysis.txt
-# Found this sys module solution on stackoverflow:
-# "https://stackoverflow.com/questions/23364096/how-to-write-output-of-terminal-to-file"
-f = open("pybank_financial_analysis.txt", 'w')
-sys.stdout = f
-
-print("")
-print("Financial Analysis")
+print(f"{unique_candidates[2]}: {round(100 * vote_percent_dict[unique_candidates[2]], 3)}% ({vote_count_dict[unique_candidates[2]]})")
 print("")
 print("--------------------------")
 print("")
-print(f"Total Months: {total_months}")
+print(f"Winner: {winner}")
 print("")
-print(f"Total: ${round(total_amount_p_and_l)}")
+
+# Write and export the results to a text file: pypoll_vote_results.txt
+# "https://stackoverflow.com/questions/23364096/how-to-write-output-of-terminal-to-file"
+f = open("pypoll_vote_results.txt", 'w')
+sys.stdout = f
+
 print("")
-print(f"Average Change: ${round(avg_pl_change, 2)}")
+print("Election Results")
 print("")
-print(f"Greatest Increase in Profits: {max_pl_change_date} (${round(max_pl_change)})")
+print("--------------------------")
 print("")
-print(f"Greatest Decrease in Profits: {min_pl_change_date} (${round(min_pl_change)})")
+print(f"Total Votes: {total_votes}")
+print("")
+print("--------------------------")
+print("")
+print(f"{unique_candidates[0]}: {round(100 * vote_percent_dict[unique_candidates[0]], 3)}% ({vote_count_dict[unique_candidates[0]]})")
+print("")
+print(f"{unique_candidates[1]}: {round(100 * vote_percent_dict[unique_candidates[1]], 3)}% ({vote_count_dict[unique_candidates[1]]})")
+print("")
+print(f"{unique_candidates[2]}: {round(100 * vote_percent_dict[unique_candidates[2]], 3)}% ({vote_count_dict[unique_candidates[2]]})")
+print("")
+print("--------------------------")
+print("")
+print(f"Winner: {winner}")
 print("")
 
 f.close()
-
-
-
-
-
-#for contender in candidate:
-
-
-
-# # assign key metric for profit/loss and empty lists to hold the pybank data
-# total_profit_loss = 0
-# pybank_headers = []
-# pybank_months = []
-# pybank_profit_loss = []
-
-# # Open the file and create lists for the Pybank column data 
-# with open(pybank_csv) as csvfile:
-#     csv_reader = csv.reader(csvfile, delimiter=",")
-
-#     pybank_headers = next(csv_reader)
-
-#     # Fill lists from months and profit/loss columns
-#     for row in csv_reader:
-#         pybank_months.append(row[0])
-#         pybank_profit_loss.append(float(row[1]))
-        
-
-# # Calculate Key Metrics
-# total_months = len(pybank_months)
-# total_amount_p_and_l = sum(pybank_profit_loss)
-
-# # Make a list of monthly profit/loss changes
-# pl_change = 0
-# max_pl_change = min(pybank_profit_loss)
-# min_pl_change = max(pybank_profit_loss)
-# pl_change_list = []
-
-# # Iterate month by month to find the profit and loss change while picking up the max/min values
-# for i in range(len(pybank_months)):
-#     if i == 0:
-#         pl_change_list.append(0)
-#     elif i > 0:
-#         pl_change = pybank_profit_loss[i] - pybank_profit_loss[i-1]
-#         pl_change_list.append(pl_change)
-
-#         if pl_change > max_pl_change:
-#             max_pl_change = pl_change
-#             max_pl_change_date = pybank_months[i]
-#         if pl_change < min_pl_change:
-#             min_pl_change = pl_change
-#             min_pl_change_date = pybank_months[i]
-
-# # The pl_change_list includes the first month value, which had no change,
-# # so the calc for the average does not include it
-# avg_pl_change = sum(pl_change_list[1:len(pl_change_list)])/(len(pl_change_list) - 1)
-
-# # Print results to Terminal
-# print("")
-# print("Financial Analysis")
-# print("")
-# print("--------------------------")
-# print("")
-# print(f"Total Months: {total_months}")
-# print("")
-# print(f"Total: ${round(total_amount_p_and_l)}")
-# print("")
-# print(f"Average Change: ${round(avg_pl_change, 2)}")
-# print("")
-# print(f"Greatest Increase in Profits: {max_pl_change_date} (${round(max_pl_change)})")
-# print("")
-# print(f"Greatest Decrease in Profits: {min_pl_change_date} (${round(min_pl_change)})")
-# print("")
-
-# # Write and export the results to a text file: pybank_financial_analysis.txt
-# # Found this sys module solution on stackoverflow:
-# # "https://stackoverflow.com/questions/23364096/how-to-write-output-of-terminal-to-file"
-# f = open("pybank_financial_analysis.txt", 'w')
-# sys.stdout = f
-
-# print("")
-# print("Financial Analysis")
-# print("")
-# print("--------------------------")
-# print("")
-# print(f"Total Months: {total_months}")
-# print("")
-# print(f"Total: ${round(total_amount_p_and_l)}")
-# print("")
-# print(f"Average Change: ${round(avg_pl_change, 2)}")
-# print("")
-# print(f"Greatest Increase in Profits: {max_pl_change_date} (${round(max_pl_change)})")
-# print("")
-# print(f"Greatest Decrease in Profits: {min_pl_change_date} (${round(min_pl_change)})")
-# print("")
-
-# f.close()
